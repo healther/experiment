@@ -16,7 +16,6 @@ import utils
 
 stub = """#!/usr/bin/env bash
 
-#MSUB -q verylong
 #MSUB -l nodes={nnodes}:ppn={nprocs}
 #MSUB -l walltime={walltime}
 
@@ -27,6 +26,8 @@ python execute_taskfile.py {joblistfile} &&
 
 PENDINGJOBFOLDER = 'jobs/pending/'
 utils.ensure_exist(PENDINGJOBFOLDER)
+RUNNINGJOBFOLDER = 'jobs/running/'
+utils.ensure_exist(RUNNINGJOBFOLDER)
 DONEJOBFOLDER    = 'jobs/done/'
 utils.ensure_exist(DONEJOBFOLDER)
 TASKFILES        = 'jobs/tasks/'
