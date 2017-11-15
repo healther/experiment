@@ -2,8 +2,8 @@ executionParams:
   clustername: BWnemo
   parameters: {timeperjob: 30, nnodes: 1, nprocs: 4, walltime: 600}
 experimentName: Test01
-executable: /scratch/wv385/Documents/git/model-quantum-spikes/spiking_neural_network/QSNN.py
-envscript: /scratch/wv385/bin/mysoftware
+executable: /home/hd/hd_hd/hd_wv385/git/model-quantum-spikes/spiking_neural_network/QSNN.py
+envscript: /home/hd/hd_hd/hd_wv385/bin/mysoftware
 stub:
   backend:
     name: neuralsampler
@@ -17,7 +17,7 @@ stub:
       nsamples: 500000
       burnin_samples: 100000
       subsampling: 50
-      executable_path: /scratch/wv385/Documents/git/neuralsampling/neuralsampler/bin/neuralsampler
+      executable_path: /home/hd/hd_hd/hd_wv385/git/neuralsampling/neuralsampler/bin/neuralsampler
   problem:
     name: TFI
     parameters:
