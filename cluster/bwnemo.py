@@ -19,18 +19,19 @@ stub = """#!/usr/bin/env bash
 #MSUB -l nodes={nnodes}:ppn={nprocs}
 #MSUB -l walltime={walltime}
 
-python {location}/execute_taskfile.py {joblistfile} &&
-""".format(location=os.path.split(os.path.realpath(__file__))[0])
+python {location}/execute_taskfile.py {joblistfile}
+"""
 
-PENDINGJOBFOLDER = 'jobs/pending/'
+location=os.path.split(os.path.realpath(__file__))[0]
+PENDINGJOBFOLDER = os.path.join(location, 'jobs/pending/')
 utils.ensure_exist(PENDINGJOBFOLDER)
-RUNNINGJOBFOLDER = 'jobs/running/'
+RUNNINGJOBFOLDER = os.path.join(location, 'jobs/running/')
 utils.ensure_exist(RUNNINGJOBFOLDER)
-DONEJOBFOLDER    = 'jobs/done/'
+DONEJOBFOLDER    = os.path.join(location, 'jobs/done/')
 utils.ensure_exist(DONEJOBFOLDER)
-TASKFILES        = 'jobs/tasks/'
+TASKFILES        = os.path.join(location, 'jobs/tasks/')
 utils.ensure_exist(TASKFILES)
-JOBLISTFILE      = 'jobs/jobs'
+JOBLISTFILE      = os.path.join(location, 'jobs/jobs')
 utils._touch(JOBLISTFILE)
 
 
@@ -46,7 +47,8 @@ def execute(jobs, timeperjob, nnodes, nprocs, walltime):
         with open(taskfiles[-1], 'w') as f:
             content = stub.format(nnodes=nnodes, nprocs=nprocs,
                                   walltime=walltime, joblistfile=joblistfile,
-                                  donejobfolder=DONEJOBFOLDER)
+                                  donejobfolder=DONEJOBFOLDER,
+                                  location=location)
             f.write(content)
     print(taskfiles)
 

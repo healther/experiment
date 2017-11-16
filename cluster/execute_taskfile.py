@@ -10,24 +10,25 @@ import sys
 import utils
 
 
-RUNNINGJOBFOLDER = 'jobs/running/'
-DONEJOBFOLDER = 'jobs/done/'
+location=os.path.split(os.path.realpath(__file__))[0]
+RUNNINGJOBFOLDER = os.path.join(location, 'jobs/running/')
+DONEJOBFOLDER = os.path.join(location, 'jobs/done/')
 
 
 def execute_jobfile(jobfile):
-    utils.touch(jobfile + '.start')
+    utils._touch(jobfile + '.start')
     try:
         stdoutfile = open(jobfile + 'out', 'w')
         ret_value = subprocess.call(['bash', jobfile],
                                      cwd=os.path.dirname(jobfile),
                                      stdout=stdoutfile)
-        utils.touch(jobfile + '.finish')
+        utils._touch(jobfile + '.finish')
         if ret_value == 0:
-            utils.touch(jobfile + '.success')
+            utils._touch(jobfile + '.success')
     except Exception as e:
         # FIXME: Improve error handling
         print("{} found exception {}".format(datetime.datetime.now(), e))
-        utils.touch(jobfile + '.finish')
+        utils._touch(jobfile + '.finish')
 
 
 # read file with the task scripts
