@@ -34,7 +34,7 @@ shutil.move(os.path.join(PENDINGJOBFOLDER, taskfile), RUNNINGJOBFOLDER)
 with open(os.path.join(TASKFILEFOLDER, taskfile), 'r') as f:
     jobfiles = [line.strip() for line in f]
 
-nproc = int(os.getenv('MOAB_PROCCOUNT', '1'))
+nproc = int(os.getenv('MYSECRETVAR_NPROC', '1'))
 if nproc > 1:
     pool = mp.Pool(nproc)
     pool.map(execute_jobfile, jobfiles)

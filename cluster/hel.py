@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-"""This module provides the handler for the BWNemo cluster
+"""This module provides the handler for the hel cluster
 
 """
 from __future__ import division, print_function
@@ -16,20 +16,16 @@ import utils
 from folders import PENDINGJOBFOLDER, TASKFILEFOLDER, JOBLISTFILE, LOCATION
 
 stub = """#!/usr/bin/env bash
-
-#MSUB -l nodes={nnodes}:ppn={nprocs}
-#MSUB -l walltime={walltime}
-
-export MYSECRETVAR_NPROC=$MOAB_PROCCOUNT
+export MYSECRETVAR_NPROC=$SLURM_JOB_CPUS_PER_NODE
 
 python {location}/execute_taskfile.py {joblistfile}
 """
 
 
-def execute(jobs, timeperjob, nnodes, nprocs, walltime):
+def execute(jobs, timeperjob, nprocs, walltime, queue):
     unique_name = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
 
-    njobs = int(walltime / timeperjob) * nprocs * nnodes
+    njobs = int(walltime / timeperjob) * nprocs
     joblistfiles = utils.get_joblistfiles(TASKFILEFOLDER + unique_name,
                                           jobs, njobs)
 
@@ -37,16 +33,15 @@ def execute(jobs, timeperjob, nnodes, nprocs, walltime):
     for i, joblistfile in enumerate(joblistfiles):
         taskfiles.append(unique_name + '_{:03d}'.format(i))
         with open(os.path.join(PENDINGJOBFOLDER, taskfiles[-1]), 'w') as f:
-            content = stub.format(nnodes=nnodes, nprocs=nprocs,
-                                  walltime=walltime, joblistfile=joblistfile,
-                                  location=LOCATION)
+            content = stub.format(joblistfile=joblistfile, location=LOCATION)
             f.write(content)
     # ensure that the filesystem is up to date
     time.sleep(.1)
 
     for i, taskfile in enumerate(taskfiles):
         try:
-            jobid = subprocess.check_output(['msub',
+            jobid = subprocess.check_output(['srun', '-c{}'.format(nprocs),
+                                    'p{}'.format(queue),
                                     os.path.join(PENDINGJOBFOLDER, taskfile)])
         except subprocess.CalledProcessError:
             raise
