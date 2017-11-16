@@ -8,13 +8,8 @@ import subprocess
 import sys
 
 import utils
-
-
-location=os.path.split(os.path.realpath(__file__))[0]
-PENDINGFOLDER = os.path.join(location, 'jobs/pending/')
-RUNNINGJOBFOLDER = os.path.join(location, 'jobs/running/')
-DONEJOBFOLDER = os.path.join(location, 'jobs/done/')
-TASKFILES        = os.path.join(location, 'jobs/tasks/')
+from folders import PENDINGJOBFOLDER, RUNNINGJOBFOLDER, DONEJOBFOLDER, \
+                    TASKFILEFOLDER
 
 
 def execute_jobfile(jobfile):
@@ -35,8 +30,8 @@ def execute_jobfile(jobfile):
 
 # read file with the task scripts
 taskfile = sys.argv[1]
-shutil.move(os.path.join(PENDINGFOLDER, taskfile), RUNNINGJOBFOLDER)
-with open(os.path.join(TASKFILES, taskfile), 'r') as f:
+shutil.move(os.path.join(PENDINGJOBFOLDER, taskfile), RUNNINGJOBFOLDER)
+with open(os.path.join(TASKFILEFOLDER, taskfile), 'r') as f:
     jobfiles = [line.strip() for line in f]
 
 nproc = int(os.getenv('MOAB_PROCCOUNT', '1'))
