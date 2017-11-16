@@ -19,10 +19,8 @@ stub = """#!/usr/bin/env bash
 #MSUB -l nodes={nnodes}:ppn={nprocs}
 #MSUB -l walltime={walltime}
 
-python execute_taskfile.py {joblistfile} &&
-
-/usr/bin/mv {joblistfile}* {donejobfolder}
-"""
+python {location}/execute_taskfile.py {joblistfile} &&
+""".format(location=os.path.split(os.path.realpath(__file__))[0])
 
 PENDINGJOBFOLDER = 'jobs/pending/'
 utils.ensure_exist(PENDINGJOBFOLDER)
