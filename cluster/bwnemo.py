@@ -43,21 +43,19 @@ def execute(jobs, timeperjob, nnodes, nprocs, walltime):
 
     taskfiles = []
     for i, joblistfile in enumerate(joblistfiles):
-        taskfiles.append(PENDINGJOBFOLDER + unique_name + '_{:03d}'.format(i))
-        with open(taskfiles[-1], 'w') as f:
+        taskfiles.append(unique_name + '_{:03d}'.format(i))
+        with open(os.path.join(PENDINGJOBFOLDER, taskfiles[-1]), 'w') as f:
             content = stub.format(nnodes=nnodes, nprocs=nprocs,
                                   walltime=walltime, joblistfile=joblistfile,
                                   donejobfolder=DONEJOBFOLDER,
                                   location=location)
             f.write(content)
-    print(taskfiles)
-
     # ensure that the filesystem is up to date
     time.sleep(.1)
 
     for i, taskfile in enumerate(taskfiles):
         try:
-            jobid = subprocess.check_output(['msub', taskfile])
+            jobid = subprocess.check_output(['msub', os.path.join(PENDINGJOBFOLDER, taskfile)])
         except subprocess.CalledProcessError:
             raise
         # with utils.LockedFile(JOBLISTFILE, 'r+') as f:
