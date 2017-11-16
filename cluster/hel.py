@@ -40,9 +40,10 @@ def execute(jobs, timeperjob, nprocs, walltime, queue):
 
     for i, taskfile in enumerate(taskfiles):
         try:
-            jobid = subprocess.check_output(['srun', '-c{}'.format(nprocs),
-                                    'p{}'.format(queue),
-                                    os.path.join(PENDINGJOBFOLDER, taskfile)])
+            jobid = subprocess.check_output(['sbatch', '-c{}'.format(nprocs),
+                                    'p{}'.format(queue), '--wrap',
+                                    'bash {}'.format(os.path.join(
+                                                PENDINGJOBFOLDER, taskfile))])
         except subprocess.CalledProcessError:
             raise
         # with utils.LockedFile(JOBLISTFILE, 'r+') as f:
