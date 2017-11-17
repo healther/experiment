@@ -13,7 +13,7 @@ import time
 import yaml
 
 import utils
-from folders import PENDINGJOBFOLDER, TASKFILEFOLDER, JOBLISTFILE, LOCATION
+from utils import PENDINGJOBFOLDER, TASKFILEFOLDER, JOBLISTFILE, LOCATION
 
 stub = """#!/usr/bin/env bash
 export MYSECRETVAR_NPROC=$SLURM_JOB_CPUS_PER_NODE

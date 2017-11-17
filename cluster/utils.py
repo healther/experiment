@@ -46,7 +46,7 @@ def get_joblistfiles(unique_name, jobs, njobs):
     for i, task in enumerate(_chunks(jobs, njobs)):
         joblist = [j for j in task]
         jobfilename = unique_name + '_{:03d}'.format(i)
-        with open(jobfilename, 'w') as f:
+        with open(os.path.join(TASKFILEFOLDER, jobfilename), 'w') as f:
             f.write('\n'.join(joblist))
         joblistfiles.append(jobfilename)
     return joblistfiles
@@ -64,3 +64,20 @@ def _chunks(l, n):
 def _touch(fname, times=None):
     with open(fname, 'a'):
         os.utime(fname, times)
+
+
+# -------- folder definitions
+# these must be down here in order to use ensure_exist and _touch
+# putting them in an extra file introduces circular dependencies -> cleaner solution?
+
+LOCATION         = os.path.split(os.path.realpath(__file__))[0]
+PENDINGJOBFOLDER = os.path.join(LOCATION, 'jobs/pending/')
+ensure_exist(PENDINGJOBFOLDER)
+RUNNINGJOBFOLDER = os.path.join(LOCATION, 'jobs/running/')
+ensure_exist(RUNNINGJOBFOLDER)
+DONEJOBFOLDER    = os.path.join(LOCATION, 'jobs/done/')
+ensure_exist(DONEJOBFOLDER)
+TASKFILEFOLDER   = os.path.join(LOCATION, 'jobs/tasks/')
+ensure_exist(TASKFILEFOLDER)
+JOBLISTFILE      = os.path.join(LOCATION, 'jobs/jobs')
+_touch(JOBLISTFILE)

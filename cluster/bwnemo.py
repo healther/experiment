@@ -13,7 +13,7 @@ import time
 import yaml
 
 import utils
-from folders import PENDINGJOBFOLDER, TASKFILEFOLDER, JOBLISTFILE, LOCATION
+from utils import PENDINGJOBFOLDER, TASKFILEFOLDER, JOBLISTFILE, LOCATION
 
 stub = """#!/usr/bin/env bash
 
@@ -30,8 +30,7 @@ def execute(jobs, timeperjob, nnodes, nprocs, walltime):
     unique_name = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
 
     njobs = int(walltime / timeperjob) * nprocs * nnodes
-    joblistfiles = utils.get_joblistfiles(TASKFILEFOLDER + unique_name,
-                                          jobs, njobs)
+    joblistfiles = utils.get_joblistfiles(unique_name, jobs, njobs)
 
     taskfiles = []
     for i, joblistfile in enumerate(joblistfiles):
