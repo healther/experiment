@@ -29,12 +29,17 @@ def execute_jobfile(jobfile):
 
 
 # read file with the task scripts
-taskfile = sys.argv[1]
+taskfile = os.path.basename(sys.argv[1])
 shutil.move(os.path.join(PENDINGJOBFOLDER, taskfile), RUNNINGJOBFOLDER)
 with open(os.path.join(TASKFILEFOLDER, taskfile), 'r') as f:
     jobfiles = [line.strip() for line in f]
 
-nproc = int(os.getenv('MYSECRETVAR_NPROC', '1'))
+nprocstr = os.getenv('MYSECRETVAR_NPROC', '1')
+try:
+    nproc = int(nprocstr) if nprocstr != '' else 1
+except:
+    nproc = 1
+
 if nproc > 1:
     pool = mp.Pool(nproc)
     pool.map(execute_jobfile, jobfiles)
