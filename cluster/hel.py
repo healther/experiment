@@ -25,14 +25,14 @@ python {location}/execute_taskfile.py {joblistfile}
 def execute(jobs, timeperjob, nprocs, walltime, queue):
     unique_name = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
     njobs = int(walltime / timeperjob) * nprocs
-    joblistfiles = utils.get_joblistfiles(TASKFILEFOLDER + unique_name,
+    taskfiles = utils.get_joblistfiles(unique_name,
                                           jobs, njobs)
 
-    taskfiles = []
-    for i, joblistfile in enumerate(joblistfiles):
-        taskfiles.append(unique_name + '_{:03d}'.format(i))
-        with open(os.path.join(PENDINGJOBFOLDER, taskfiles[-1]), 'w') as f:
-            content = stub.format(joblistfile=joblistfile, location=LOCATION)
+    for i, taskfile in enumerate(taskfiles):
+        with open(os.path.join(PENDINGJOBFOLDER, taskfile), 'w') as f:
+            content = stub.format(
+                            joblistfile=os.path.join(TASKFILEFOLDER, taskfile),
+                            location=LOCATION)
             f.write(content)
     # ensure that the filesystem is up to date
     time.sleep(.1)
@@ -42,7 +42,7 @@ def execute(jobs, timeperjob, nprocs, walltime, queue):
             jobid = subprocess.check_output(['sbatch',
                                 '-c', '{}'.format(nprocs),
                                 '-p', '{}'.format(queue),
-                                '--wrap="bash {}"'.format(
+                                '--wrap=bash {}'.format(
                                     os.path.join(PENDINGJOBFOLDER, taskfile))])
             jobid = jobid.strip().split()[-1]
         except subprocess.CalledProcessError:
@@ -52,6 +52,6 @@ def execute(jobs, timeperjob, nprocs, walltime, queue):
             data = yaml.load(f.read())
             if data is None:
                 data = []
-            data.append({jobid: joblistfiles[i]})
+            data.append({jobid: os.path.join(TASKFILEFOLDER, taskfiles[i])})
             f.seek(0)
             f.write(yaml.dump(data))
