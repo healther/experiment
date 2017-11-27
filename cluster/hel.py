@@ -24,7 +24,6 @@ python {location}/execute_taskfile.py {joblistfile}
 
 def execute(jobs, timeperjob, nprocs, walltime, queue):
     unique_name = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
-
     njobs = int(walltime / timeperjob) * nprocs
     joblistfiles = utils.get_joblistfiles(TASKFILEFOLDER + unique_name,
                                           jobs, njobs)
@@ -40,9 +39,12 @@ def execute(jobs, timeperjob, nprocs, walltime, queue):
 
     for i, taskfile in enumerate(taskfiles):
         try:
-            jobid = subprocess.check_output(['sbatch', '-c{}'.format(nprocs),
-                                    '-p', queue, '--wrap', '"bash {}"'.format(
+            jobid = subprocess.check_output(['sbatch',
+                                '-c', '{}'.format(nprocs),
+                                '-p', '{}'.format(queue),
+                                '--wrap="bash {}"'.format(
                                     os.path.join(PENDINGJOBFOLDER, taskfile))])
+            jobid = jobid.strip().split()[-1]
         except subprocess.CalledProcessError:
             raise
         # with utils.LockedFile(JOBLISTFILE, 'r+') as f:
