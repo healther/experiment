@@ -56,7 +56,7 @@ def expanddict(dict_to_expand, expansions, rules):
     [{1: 'a', 2: {3: 'a', 4: 11}}, {1: 'b', 2: {3: 'b', 4: 11}}, {1: 'a', 2: {3: 'a', 4: 12}}, {1: 'b', 2: {3: 'b', 4: 12}}]
     """
     expanded_dicts = [dict_to_expand]
-    for ident, values in expansions.iteritems():
+    for ident, values in expansions.items():
         keypositions = _find_key_from_identifier(dict_to_expand, ident)
         tmp = []
         for d in expanded_dicts:
@@ -116,7 +116,7 @@ def _find_key_from_identifier(dict_to_expand, identifier):
     [[1], [2, 3]]
     """
     keypositions = []
-    for k, v in dict_to_expand.iteritems():
+    for k, v in dict_to_expand.items():
         if v == identifier:
             keypositions.append([k])
         elif isinstance(v, dict):
@@ -207,4 +207,7 @@ def _get_from_dict(dataDict, key, *keys):
 
 if __name__ == '__main__':
     import doctest
-    print(doctest.testmod())
+    import sys
+    res = doctest.testmod()
+    print(res)
+    sys.exit(res[0])
