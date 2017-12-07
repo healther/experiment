@@ -44,6 +44,7 @@ def expanddict(dict_to_expand, expansions, rules):
     Input:
         dict_to_expand: dictionary with values to replace
         expansions: dictionary of {"identifier": [values]} tuples
+        rules: dictionary of restrictions TODO: add description
 
     Output:
         expanded_dicts: list of dictionaries with all expansions due to the
@@ -51,7 +52,7 @@ def expanddict(dict_to_expand, expansions, rules):
 
     >>> d = { 1: 'blub', 2: {3: 'blub', 4: 'hello'}}
     >>> e = {'blub': ['a', 'b'], 'hello': [11, 12]}
-    >>> expanddict(d, e)
+    >>> expanddict(d, e, {})
     [{1: 'a', 2: {3: 'a', 4: 11}}, {1: 'b', 2: {3: 'b', 4: 11}}, {1: 'a', 2: {3: 'a', 4: 12}}, {1: 'b', 2: {3: 'b', 4: 12}}]
     """
     expanded_dicts = [dict_to_expand]
@@ -111,7 +112,7 @@ def _find_key_from_identifier(dict_to_expand, identifier):
             identifier.
 
     >>> d = { 1: 'blub', 2: {3: 'blub', 4: 'hello'}}
-    >>> find_key_from_identifier(d, 'blub')
+    >>> _find_key_from_identifier(d, 'blub')
     [[1], [2, 3]]
     """
     keypositions = []
@@ -134,7 +135,7 @@ def _flatten_dictionary(d, parent_key='', sep='_'):
     """Return a flat dictionary with concatenated keys for a nested dictionary d.
 
     >>> d = { 'a': {'aa': 1, 'ab': {'aba': 11}}, 'b': 2, 'c': {'cc': 3}}
-    >>> flatten_dictionary(d)
+    >>> _flatten_dictionary(d)
     {'a_aa': 1, 'b': 2, 'c_cc': 3, 'a_ab_aba': 11}
 
     """
@@ -152,11 +153,13 @@ def _update_dict(dic, value, key, *keys):
     """Set dic[k0][k1]...[kn] = value for keys=[k0, k1, ..., kn].
 
     >>> d = { 1: 'blub', 2: {3: 'blub', 4: 'hello'}}
-    >>> keys = find_key_from_identifier(d, 'blub')
-    >>> update_dict(d, 'ch', *keys[0])
+    >>> keys = _find_key_from_identifier(d, 'blub')
+    >>> keys
+    [[1], [2, 3]]
+    >>> _update_dict(d, 'ch', *keys[0])
     >>> d
     {1: 'ch', 2: {3: 'blub', 4: 'hello'}}
-    >>> update_dict(d, 'ch', *keys[1])
+    >>> _update_dict(d, 'ch', *keys[1])
     >>> d
     {1: 'ch', 2: {3: 'ch', 4: 'hello'}}
     """
@@ -191,12 +194,17 @@ def _get_from_dict(dataDict, key, *keys):
     """Recursive get from nested dicts
 
     >>> d = { 1: {2: 'blub', 3: 'argh'}, 4: {5: 'use'}}
-    >>> getFromDict(d, 1, 3)
+    >>> _get_from_dict(d, 1, 3)
     'argh'
-    >>> getFromDict(d, 4, 5)
+    >>> _get_from_dict(d, 4, 5)
     'use'
     """
     if keys:
         return _get_from_dict(dataDict[key], *keys)
     else:
         return dataDict[key]
+
+
+if __name__ == '__main__':
+    import doctest
+    print(doctest.testmod())
