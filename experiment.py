@@ -5,6 +5,7 @@ Basic workflow:
 """
 from __future__ import print_function, division
 
+import datetime
 import os
 
 import json
@@ -29,11 +30,17 @@ set -x
 
 def summarize(experiment_name, folders):
     output = []
+    print("{}: Collecting {} results".format(datetime.datetime.now(), len(folders)))
     for folder in folders:
-        output.append(json.load(open(os.path.join(folder, 'analysis'), 'r')))
+        try:
+            output.append(json.load(open(os.path.join(folder, 'analysis'), 'r')))
+        except IOError: # no useable analysis file
+            continue
+    print("{}: Collected {} results".format(datetime.datetime.now(), len(output)))
 
+    utils.ensure_exist('collect')
     with open(os.path.join('collect', experiment_name), 'w') as f:
-        f.write(json.dump(output))
+        json.dump(output, f)
 
 
 def main(experimentfile, generate_sims, execute_sims, check_sims,
