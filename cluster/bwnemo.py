@@ -10,7 +10,7 @@ import os
 import subprocess
 import time
 
-import yaml
+import json
 
 import utils
 from utils import PENDINGJOBFOLDER, TASKFILEFOLDER, JOBLISTFILE, LOCATION
@@ -50,10 +50,11 @@ def execute(jobs, timeperjob, nnodes, nprocs, walltime):
         except subprocess.CalledProcessError:
             raise
         # with utils.LockedFile(JOBLISTFILE, 'r+') as f:
-        with open(JOBLISTFILE, 'r+') as f:
-            data = yaml.load(f.read())
-            if data is None:
-                data = []
-            data.append({jobid: joblistfiles[i]})
-            f.seek(0)
-            f.write(yaml.dump(data))
+        try:
+            with open(JOBLISTFILE, 'r') as f:
+                data = json.load(f)
+        except ValueError: # empty json file
+            data = []
+        data.append({jobid: joblistfiles[i]})
+        with open(JOBLISTFILE, 'w') as f:
+            json.dump(data, f)

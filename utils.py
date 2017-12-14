@@ -7,6 +7,7 @@ from __future__ import print_function, division
 
 import collections
 import copy
+import glob
 import os
 import shutil
 import warnings
@@ -35,6 +36,11 @@ def ensure_exist(folder):
     except OSError:
         if not os.path.isdir(folder):
             raise
+
+
+def ensure_is_empty(folder):
+    for f in glob.glob(folder + '/*'):
+        os.remove(f)
 
 
 def expanddict(dict_to_expand, expansions, rules):

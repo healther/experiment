@@ -2,45 +2,69 @@ executionParams:
   clustername: BWnemo
   parameters: {timeperjob: 30, nnodes: 1, nprocs: 4, walltime: 600}
 experimentName: Test01
-executable: /home/hd/hd_hd/hd_wv385/git/model-quantum-spikes/spiking_neural_network/QSNN.py
+executable: /home/hd/hd_hd/hd_wv385/git/networks/01_ISING/ISING.py
 envscript: /home/hd/hd_hd/hd_wv385/bin/mysoftware
 stub:
   backend:
-    name: neuralsampler
+    name: NeuralSampler
+    executable_path: /home/hd/hd_hd/hd_wv385/git/neuralsampling/neuralsampler/bin/neuralsampler
+    dicts:
+      Config:
+        NeuronType: log
+        delay: 1
+        networkUpdateScheme: InOrder
+        nupdates: 100
+        subsampling: 1
+        outputEnv: false
+        outputScheme: MeanActivity
+        randomSkip: 1000000
+        synapseType: synapseType
+        tauref: 100
+        tausyn: 100
+      temperature:
+        times: [0, 10000000001]
+        values: [1., 1.]
+        type: Const
+      externalCurrent:
+        times: [0, 10000000001]
+        values: [0., 0.]
+        type: Const
+  network:
+    weightname: create_nn
+    weightparameters:
+      linearsize: 80
+      dimension: 2
+      weight: w
+      weightnoise: 0.
+      weightnoiseseed: 0
+    biasname: create_bias
+    biasparameters:
+      biasfactor: bf
+      biasoffset: 0.
+      biasnoise: 0.
+      biasnoiseseed: 0
+    initialstatename: create_uniform_initialstate
+    initialstateparameters:
+      nsites: 6400
+      meanactivity: 0.5
+      initialrseed: 42424242
+      tauzeromin: 0
+      tauzeromax: 100
+      tauonemin: 100
+      tauonemax: 200
+  analysis:
+    name: analysis_mean
     parameters:
-      config_dict:
-        outfile: out
-        Config:
-          synapseType: synapseType
-          tauref: 100
-          tausyn: 100
-      nsamples: 500000
-      burnin_samples: 100000
-      subsampling: 50
-      executable_path: /home/hd/hd_hd/hd_wv385/git/neuralsampling/neuralsampler/bin/neuralsampler
-  problem:
-    name: TFI
-    parameters:
-      nsites: 5
-      coupling: 1.
-      field: 1.
-  learner:
-    name: SGD
-    parameters:
-      nsites: nsites
-      alpha: alpha
-      mean: 0.
-      std: 0.01
-      eta: eta
-  nupdates: 10000
+      burnin: 10
+      subsampling: 1
+      nupdates: 100
+    timecourse: True
+    timecourseparameters:
+      time: 1
+    video: False
+    videoparameters: None
   folder: /scratch/wv385/Documents/git/model-quantum-spikes/spiking_neural_network/test2
-  logging:
-    samples: True
-    energies: True
-    energy: True
-    parameters: True
 replacements:
-  synapseType: [rect, exp]
-  nsites: [5, 10, 20]
-  alpha: [1, 2, 4]
-  eta: [.001, .0001, .00001]
+  synapseType: [rect]
+  w: [1.]
+  bf: [1.]

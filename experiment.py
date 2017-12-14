@@ -7,6 +7,7 @@ from __future__ import print_function, division
 
 import os
 
+import json
 import yaml
 
 import jobcontrol
@@ -21,7 +22,7 @@ cd "{folder}" &&
 set +x
 source {envscript} &&
 set -x
-{executable} "{folder}/sim.yaml" &&
+{executable} "{folder}/sim.json" &&
 /usr/bin/touch "{folder}/success"
 """
 
@@ -29,10 +30,10 @@ set -x
 def summarize(experiment_name, folders):
     output = []
     for folder in folders:
-        output.append(yaml.load(open(os.path.join(folder, 'analysis'), 'r')))
+        output.append(json.load(open(os.path.join(folder, 'analysis'), 'r')))
 
     with open(os.path.join('collect', experiment_name), 'w') as f:
-        f.write(yaml.dump(output))
+        f.write(json.dump(output))
 
 
 def main(experimentfile, generate_sims, execute_sims, check_sims,
@@ -68,12 +69,13 @@ def main(experimentfile, generate_sims, execute_sims, check_sims,
         for i, (folder, sdict) in enumerate(zip(sim_folders, sim_dicts)):
             content = stub.format(folder=folder, envscript=envscript,
                                   executable=executable)
+            utils.ensure_is_empty(folder)
             utils.ensure_exist(folder)
             with open(os.path.join(folder, 'job'), 'w') as f:
                 f.write(content)
             sdict['folder'] = folder
-            with open(os.path.join(folder, 'sim.yaml'), 'w') as f:
-                f.write(yaml.dump(sdict))
+            with open(os.path.join(folder, 'sim.json'), 'w') as f:
+                json.dump(sdict, f)
 
     if execute_sims:
         jobs = utils.get_jobs(sim_folders)
