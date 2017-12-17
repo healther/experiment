@@ -44,8 +44,7 @@ def summarize(experiment_name, folders):
 
 
 def main(experimentfile, generate_sims, execute_sims, check_sims,
-         summarize_sims):
-
+         summarize_sims, quiet=False):
     experiment_dict = yaml.load(open(experimentfile, 'r'))
 
     execution_params = experiment_dict.pop('executionParams')
@@ -58,7 +57,7 @@ def main(experimentfile, generate_sims, execute_sims, check_sims,
     basefolder = experiment_dict.pop('basefolder',
                                 os.path.dirname(os.path.realpath(__file__)))
 
-    utils.ensure_tracking(experiment_name, experimentfile)
+    utils.ensure_tracking(experiment_name, experimentfile, quiet=quiet)
 
     stub_dict = experiment_dict.pop('stub')
 
@@ -88,6 +87,9 @@ def main(experimentfile, generate_sims, execute_sims, check_sims,
         jobs = utils.get_jobs(sim_folders)
         jobcontrol.execute(jobs, **execution_params)
 
+    if check_sims:
+        raise NotImplementedError()
+
     if summarize_sims:
         summarize(experiment_name, sim_folders)
 
@@ -104,6 +106,8 @@ if __name__ == "__main__":
     parser.add_argument('--check-sims', '-c', dest='check_sims',
                     action='store_const', const=True, default=False,)
     parser.add_argument('--summarize-sims', '-s', dest='summarize_sims',
+                    action='store_const', const=True, default=False,)
+    parser.add_argument('--quiet', '-q', dest='quiet',
                     action='store_const', const=True, default=False,)
 
     args = parser.parse_args()

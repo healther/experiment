@@ -13,19 +13,22 @@ import shutil
 import warnings
 
 
-def ensure_tracking(experiment_name, experimentfile):
+def ensure_tracking(experiment_name, experimentfile, quiet=False):
     ensure_exist(os.path.join('simulations', '01_runs'))
     trackingFileName = os.path.join('simulations', '01_runs', experiment_name)
     if os.path.isfile(trackingFileName):
-        response = raw_input("{} already exists. Do you want to override "
-                             "it? [y/n/a]  ".format(trackingFileName))
-        if response is "y":
-            shutil.copy(experimentfile, trackingFileName)
-        elif response is "n":
-            pass
+        if quiet:
+            return
         else:
-            print("Aborting")
-            exit()
+            response = raw_input("{} already exists. Do you want to override "
+                                 "it? [y/n/a]  ".format(trackingFileName))
+            if response is "n":
+                pass
+            elif response is "y":
+                shutil.copy(experimentfile, trackingFileName)
+            else:
+                print("Aborting")
+                exit()
     else:
         shutil.copy(experimentfile, trackingFileName)
 
