@@ -28,14 +28,16 @@ set -x
 """
 
 
-def summarize(experiment_name, folders):
+def summarize(experiment_name, folders, quiet=False):
     output = []
     print("{}: Collecting {} results".format(datetime.datetime.now(), len(folders)))
-    for folder in folders:
+    for i, folder in enumerate(folders):
         try:
             output.append(json.load(open(os.path.join(folder, 'analysis'), 'r')))
         except IOError: # no useable analysis file
             continue
+        if not quiet:
+            print("Collecting {: 3.1f}% complete".format(100*i/len(folders)), end='\r')
     print("{}: Collected {} results".format(datetime.datetime.now(), len(output)))
 
     utils.ensure_exist('collect')
@@ -91,7 +93,7 @@ def main(experimentfile, generate_sims, execute_sims, check_sims,
         raise NotImplementedError()
 
     if summarize_sims:
-        summarize(experiment_name, sim_folders)
+        summarize(experiment_name, sim_folders, quiet=quiet)
 
 
 if __name__ == "__main__":
