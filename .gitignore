@@ -102,6 +102,12 @@ ENV/
 
 # jobtracker
 cluster/jobs/
+collect/
+simulations/
 
 # joboutputfiles
 2017*
+
+# plots
+*.pdf
+*.state
