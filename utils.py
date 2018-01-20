@@ -13,6 +13,13 @@ import shutil
 import warnings
 
 
+# python2 compatibility
+try:
+    input = raw_input
+except NameError:
+    pass
+
+
 def ensure_tracking(experiment_name, experimentfile, quiet=False):
     ensure_exist(os.path.join('simulations', '01_runs'))
     trackingFileName = os.path.join('simulations', '01_runs', experiment_name)
@@ -20,7 +27,7 @@ def ensure_tracking(experiment_name, experimentfile, quiet=False):
         if quiet:
             return
         else:
-            response = raw_input("{} already exists. Do you want to override "
+            response = input("{} already exists. Do you want to override "
                                  "it? [y/n/a]  ".format(trackingFileName))
             if response is "n":
                 pass

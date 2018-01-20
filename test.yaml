@@ -2,33 +2,42 @@ executionParams:
   clustername: BWnemo
   parameters: {timeperjob: 30, nnodes: 1, nprocs: 4, walltime: 600}
 experimentName: Test01
-executable: /home/hd/hd_hd/hd_wv385/git/networks/01_ISING/ISING.py
+executable: /scratch/wv385/Documents/git/networks/01_ISING/ISING.py
 envscript: /home/hd/hd_hd/hd_wv385/bin/mysoftware
 stub:
   backend:
-    name: NeuralSampler
-    executable_path: /home/hd/hd_hd/hd_wv385/git/neuralsampling/neuralsampler/bin/neuralsampler
+    name: SBSSampler
+    executable_path: None
     dicts:
+      temperature: None
+      externalCurrent: None
       Config:
-        NeuronType: log
-        delay: 1
-        networkUpdateScheme: InOrder
-        nupdates: 100
-        subsampling: 1
-        outputEnv: false
-        outputScheme: MeanActivity
-        randomSkip: 1000000
-        synapseType: synapseType
-        tauref: 100
-        tausyn: 100
-      temperature:
-        times: [0, 10000000001]
-        values: [1., 1.]
-        type: Const
-      externalCurrent:
-        times: [0, 10000000001]
-        values: [0., 0.]
-        type: Const
+        Calibration:
+          parameters:
+            cm: .2
+            tau_m: 1.
+            e_rev_E: 0.
+            e_rev_I: -100.
+            v_thresh: -50.
+            tau_syn_E: 10.
+            v_rest: -50.
+            tau_syn_I: 10.
+            v_reset: -50.001
+            tau_refrac: 10.
+            i_offset: 0.
+          folder: /scratch/wv385/calibrations
+          runCalibration: True
+          simName: pyNN.nest
+          noise:
+            weights: [0.001, -0.001]
+            rates: [2000., 2000.]
+        saturating: True
+        TSO: True
+        Run:
+          duration: 1E6
+          dt: .1
+          burnInTime: 0.
+          sampledt: 10.
   network:
     weightname: create_nn
     weightparameters:
@@ -65,6 +74,5 @@ stub:
     videoparameters: None
   folder: /scratch/wv385/Documents/git/model-quantum-spikes/spiking_neural_network/test2
 replacements:
-  synapseType: [rect]
   w: [1.]
   bf: [1.]

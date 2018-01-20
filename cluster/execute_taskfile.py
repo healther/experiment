@@ -7,8 +7,8 @@ import shutil
 import subprocess
 import sys
 
-import utils
-from utils import PENDINGJOBFOLDER, RUNNINGJOBFOLDER, DONEJOBFOLDER, \
+from . import utils
+from .utils import PENDINGJOBFOLDER, RUNNINGJOBFOLDER, DONEJOBFOLDER, \
                     TASKFILEFOLDER
 
 

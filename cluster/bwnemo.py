@@ -12,8 +12,8 @@ import time
 
 import json
 
-import utils
-from utils import PENDINGJOBFOLDER, TASKFILEFOLDER, JOBLISTFILE, LOCATION
+from . import utils
+from .utils import PENDINGJOBFOLDER, TASKFILEFOLDER, JOBLISTFILE, LOCATION
 
 stub = """#!/usr/bin/env bash
 

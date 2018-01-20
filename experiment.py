@@ -83,7 +83,7 @@ def main(experimentfile, generate_sims, execute_sims, check_sims,
                 f.write(content)
             sdict['folder'] = folder
             with open(os.path.join(folder, 'sim.json'), 'w') as f:
-                json.dump(sdict, f)
+                json.dump(sdict, f, indent=2)
 
     if execute_sims:
         jobs = utils.get_jobs(sim_folders)
