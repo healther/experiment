@@ -22,7 +22,7 @@ stub = """#!/usr/bin/env bash
 
 export MYSECRETVAR_NPROC=$MOAB_PROCCOUNT
 
-python {location}/execute_taskfile.py {joblistfile}
+python -m {location}/execute_taskfile {joblistfile}
 """
 
 

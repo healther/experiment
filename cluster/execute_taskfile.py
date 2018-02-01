@@ -7,9 +7,16 @@ import shutil
 import subprocess
 import sys
 
-from . import utils
-from .utils import PENDINGJOBFOLDER, RUNNINGJOBFOLDER, DONEJOBFOLDER, \
-                    TASKFILEFOLDER
+if 1: #__package__ is None:
+    sys.path.insert(0, os.path.dirname( os.path.abspath(__file__) ) )
+    import utils
+    from utils import PENDINGJOBFOLDER, RUNNINGJOBFOLDER, DONEJOBFOLDER, \
+                        TASKFILEFOLDER
+else:
+    from . import utils
+    from .utils import PENDINGJOBFOLDER, RUNNINGJOBFOLDER, DONEJOBFOLDER, \
+                        TASKFILEFOLDER
+
 
 
 def execute_jobfile(jobfile):
