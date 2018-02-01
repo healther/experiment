@@ -23,9 +23,11 @@ def execute_jobfile(jobfile):
     utils._touch(jobfile + '.start')
     try:
         stdoutfile = open(jobfile + 'out', 'w')
+        stderrfile = open(jobfile + 'err', 'w')
         ret_value = subprocess.call(['bash', jobfile],
                                      cwd=os.path.dirname(jobfile),
-                                     stdout=stdoutfile)
+                                     stdout=stdoutfile,
+                                     stderr=stderrfile)
         utils._touch(jobfile + '.finish')
         if ret_value == 0:
             utils._touch(jobfile + '.success')
