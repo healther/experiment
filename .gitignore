@@ -107,6 +107,7 @@ simulations/
 
 # joboutputfiles
 2017*
+2018*
 
 # plots
 *.pdf
