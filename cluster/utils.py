@@ -6,6 +6,10 @@ class TimeOutError(Exception):
     pass
 
 
+def WalltimeError(BaseException):
+    pass
+
+
 class LockedFile(object):
     """docstring for LockedFile"""
     def __init__(self, locked_file, mode, timeout=60.):
@@ -42,6 +46,9 @@ def ensure_exist(folder):
 
 
 def get_joblistfiles(unique_name, jobs, njobs):
+    if not njobs > 0:
+        raise WalltimeError("Walltime needs to be larger than timeperjob")
+
     joblistfiles = []
     for i, task in enumerate(_chunks(jobs, njobs)):
         joblist = [j for j in task]
