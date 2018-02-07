@@ -28,13 +28,14 @@ def execute_jobfile(jobfile):
                                      cwd=os.path.dirname(jobfile),
                                      stdout=stdoutfile,
                                      stderr=stderrfile)
-        utils._touch(jobfile + '.finish')
         if ret_value == 0:
             utils._touch(jobfile + '.success')
+        else:
+            print("Jobfile {} returned with non-zero value".format(jobfile))
     except Exception as e:
         # FIXME: Improve error handling
         print("{} found exception {}".format(datetime.datetime.now(), e))
-        utils._touch(jobfile + '.finish')
+    utils._touch(jobfile + '.finish')
 
 
 # read file with the task scripts
