@@ -27,7 +27,14 @@ def ensure_tracking(experiment_name, experimentfile, quiet=False):
         if quiet:
             return
         else:
-            response = input("{} already exists. Do you want to override "
+            if os.path.basename(experimentfile) != experiment_name:
+                response = input("{} already exists and is named different "
+                                "than your current file {} are you sure you "
+                                "set experimentName correctly?\nDo you want "
+                                "to override it? [y/n/a]  ".format(
+                                    trackingFileName, experimentfile))
+            else:
+                response = input("{} already exists. Do you want to override "
                                  "it? [y/n/a]  ".format(trackingFileName))
             if response is "n":
                 pass
@@ -187,16 +194,19 @@ def _update_dict(dic, value, key, *keys):
 
 def _violate_any(dic, rules):
     for rule in rules:
-        factor1 = _get_from_dict(dic, rules[0])
-        factor2 = _get_from_dict(dic, rules[1])
-        operator = rules[2]
+        factor1 = _get_from_dict(dic, *rule[0])
+        factor2 = _get_from_dict(dic, *rule[1])
+        operator = rule[2]
         if _violate(operator, factor1, factor2):
             return True
-
+        else:
+            return False
 
 def _violate(operator, factor1, factor2):
     if operator == '==':
         return factor1 != factor2
+    elif operator == '-==':
+        return factor1 != -factor2
     elif operator == '<':
         return factor1 >= factor2
     elif operator == '>':
@@ -204,7 +214,6 @@ def _violate(operator, factor1, factor2):
     else:
         raise NotImplementedError('No rule for {} implemented'
                                   ''.format(operator))
-
 
 def _get_from_dict(dataDict, key, *keys):
     """Recursive get from nested dicts
