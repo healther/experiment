@@ -15,11 +15,18 @@ import jobcontrol
 import utils
 
 
-stub = """
-#!/usr/bin/env bash
+successCatch_stub = """
+if [ -e success ]
+then
+    echo "Simulation already successfully completed, finishing"
+    exit 0
+fi
+"""
+stub = """#!/usr/bin/env bash
 
 set -x
 cd "{folder}" &&
+{successCatch}
 set +x
 source {envscript} &&
 set -x
@@ -45,7 +52,7 @@ def summarize(experiment_name, folders, quiet=False):
         json.dump(output, f)
 
 
-def main(experimentfile, generate_sims, execute_sims, check_sims,
+def main(experimentfile, generate_sims, execute_sims, check_success,
          summarize_sims, quiet=False):
     experiment_dict = yaml.load(open(experimentfile, 'r'))
 
@@ -74,9 +81,11 @@ def main(experimentfile, generate_sims, execute_sims, check_sims,
     sim_folders = utils.get_folders(sim_dicts, sim_folder_template)
 
     if generate_sims:
+        successCatch = successCatch_stub if check_success else ""
         for i, (folder, sdict) in enumerate(zip(sim_folders, sim_dicts)):
             content = stub.format(folder=folder, envscript=envscript,
-                                  executable=executable)
+                                  executable=executable,
+                                  successCatch=successCatch)
             utils.ensure_is_empty(folder)
             utils.ensure_exist(folder)
             with open(os.path.join(folder, 'job'), 'w') as f:
@@ -88,9 +97,6 @@ def main(experimentfile, generate_sims, execute_sims, check_sims,
     if execute_sims:
         jobs = utils.get_jobs(sim_folders)
         jobcontrol.execute(jobs, **execution_params)
-
-    if check_sims:
-        raise NotImplementedError()
 
     if summarize_sims:
         summarize(experiment_name, sim_folders, quiet=quiet)
@@ -105,7 +111,7 @@ if __name__ == "__main__":
                     action='store_const', const=True, default=False,)
     parser.add_argument('--execute-sims', '-e', dest='execute_sims',
                     action='store_const', const=True, default=False,)
-    parser.add_argument('--check-sims', '-c', dest='check_sims',
+    parser.add_argument('--check-success', '-c', dest='check_success',
                     action='store_const', const=True, default=False,)
     parser.add_argument('--summarize-sims', '-s', dest='summarize_sims',
                     action='store_const', const=True, default=False,)
