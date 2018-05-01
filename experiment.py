@@ -86,7 +86,8 @@ def main(experimentfile, generate_sims, execute_sims, check_success,
             content = stub.format(folder=folder, envscript=envscript,
                                   executable=executable,
                                   successCatch=successCatch)
-            utils.ensure_is_empty(folder)
+            if not check_success:
+                utils.ensure_is_empty(folder)
             utils.ensure_exist(folder)
             with open(os.path.join(folder, 'job'), 'w') as f:
                 f.write(content)
