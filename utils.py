@@ -12,6 +12,8 @@ import os
 import shutil
 import warnings
 
+import numpy as np
+
 
 # python2 compatibility
 try:
@@ -80,6 +82,13 @@ def expanddict(dict_to_expand, expansions, rules):
     """
     expanded_dicts = [dict_to_expand]
     for ident, values in expansions.items():
+        if values[0] == 'func':
+            if values[1] == 'linspace':
+                values = np.linspace(values[2], values[3], values[4])
+            elif values[1] == 'logspace':
+                values = np.logspace(values[2], values[3], values[5])
+            else:
+                raise ValueError("Didn't recognize {} as a function type".format(values[1]))
         keypositions = _find_key_from_identifier(dict_to_expand, ident)
         tmp = []
         for d in expanded_dicts:
