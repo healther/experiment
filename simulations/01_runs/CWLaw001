@@ -1,0 +1,94 @@
+executionParams:
+  clustername: BWnemo
+  parameters: {timeperjob: 40000, nnodes: 1, nprocs: 20, walltime: 82000}
+experimentName: CWLaw001
+executable: /home/hd/hd_hd/hd_wv385/git/networks/01_ISING/ISING.py
+envscript: /home/hd/hd_hd/hd_wv385/bin/mysoftware
+stub:
+  backend:
+    name: SBSSampler
+    executable_path: None
+    dicts:
+      temperature: None
+      externalCurrent: None
+      Config:
+        Calibration:
+          runparams:
+            duration: 100000.
+            num_samples: 150
+            burn_in_time: 500.
+            dt: 0.01
+            sim_setup_kwargs:
+              spike_precision: on_grid
+          parameters:
+            cm: 0.002
+            tau_m: .1
+            e_rev_E: 50.
+            e_rev_I: -50.
+            v_thresh: -0.
+            tau_syn_E: 10.
+            v_rest: -0.
+            tau_syn_I: 10.
+            v_reset: -0.001
+            tau_refrac: 10.
+            i_offset: 0.
+          folder: /work/ws/nemo/hd_wv385-critical-0/calibration
+          runCalibration: False
+          simName: pyNN.nest
+          noise:
+            weights: [posweight, negweight]
+            rates: [nu, nu]
+        saturating_synapses_enabled: True
+        use_proper_tso: True
+        Run:
+          duration: 300000.
+          dt: .1
+          burnInTime: 0.
+          sampledt: 10.
+          v_0: -40.
+          past_len: 20.  
+  network:
+    weightname: create_nn
+    weightparameters:
+      linearsize: 40
+      dimension: 2
+      weight: 1.0
+      weightnoise: 0.
+      weightnoiseseed: 0
+    biasname: create_bias
+    biasparameters:
+      biasfactor: bf
+      biasoffset: boffset
+      biasnoise: 0.
+      biasnoiseseed: 0
+    initialstatename: create_uniform_initialstate
+    initialstateparameters:
+      nsites: 1600
+      meanactivity: 0.5
+      initialrseed: 42424242
+      tauzeromin: 0
+      tauzeromax: 100
+      tauonemin: 100
+      tauonemax: 200
+  analysis:
+    name: analysis_mean
+    parameters:
+      burnin: 000
+      subsampling: 1
+      nupdates: 30000
+      nsamplers: 1600
+      tauref: 100
+    timecourse: True
+    timecourseparameters:
+      time: 1
+    video: False
+    videoparameters: None
+  folder: /scratch/wv385/Documents/git/model-quantum-spikes/spiking_neural_network/test2
+replacements:
+  bf: [1.0, 1.1, 1.2, 1.3, 1.4]
+  boffset: [0., 0.01, 0.03, 0.1]
+  posweight: [0.01, 0.1, 1.0, 10.]
+  negweight: [-0.01, -0.1, -1.0, -10.]
+  nu: [500., 1000., 2500., 5000., 10000.]
+rules:
+  - [[backend, dicts, Config, Calibration, noise, weights, 0], [backend, dicts, Config, Calibration, noise, weights, 1], -==]

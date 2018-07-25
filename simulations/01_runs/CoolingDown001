@@ -1,0 +1,66 @@
+executionParams:
+  clustername: BWnemo
+  parameters: {timeperjob: 150000., nnodes: 1, nprocs: 20, walltime: 155000}
+executable: /home/hd/hd_hd/hd_wv385/git/networks/01_ISING/ISING.py
+envscript: /home/hd/hd_hd/hd_wv385/bin/mysoftware
+stub:
+  backend:
+    name: NeuralSampler
+    executable_path: /home/hd/hd_hd/hd_wv385/git/neuralsampling/neuralsampler/bin/neuralsampler
+    dicts:
+      Config:
+        NeuronType: log
+        delay: 1
+        networkUpdateScheme: InOrder
+        nupdates: 10000000
+        subsampling: 10
+        outputEnv: True
+        outputScheme: BinaryState
+        randomSeed: rseed
+        randomSkip: 1000000
+        synapseType: exp 
+        tauref: 100
+        tausyn: 100
+      temperature:
+        type: Linear
+        times: [0, 10000001]
+        values: [100., 0.3]
+      externalCurrent:
+        type: Const
+        times: [0, 10010000]
+        values: [0., 0.]
+  network:
+    weightname: create_nn
+    weightparameters:
+      linearsize: 80
+      dimension: 2
+      weight: 1.0
+      weightnoise: 0.
+      weightnoiseseed: 0
+    biasname: create_bias
+    biasparameters:
+      biasfactor: bf
+      biasoffset: 0.
+      biasnoise: 0.
+      biasnoiseseed: 0
+    initialstatename: create_initialstate_from_file
+    initialstateparameters:
+      nsites: 6400
+      fname: /work/ws/nemo/hd_wv385-critical-0/experiment/final_1.215_1.3.state
+  analysis:
+    name: analysis_mean
+    parameters:
+      burnin: 0
+      subsampling: 1
+      nupdates: 1000000
+    timecourse: True
+    timecourseparameters:
+      time: 1
+    video: False
+    videoparameters: None
+    finalstate: True
+experimentName: CoolingDown001
+
+replacements:
+  bf: [1.17, 1.18, 1.19, 1.20, 1.21, 1.22, 1.23, 1.24, 1.25, 1.26]
+  rseed: [42424242, 42424243, 42424244, 42424245]
