@@ -9,7 +9,6 @@ stub:
     name: SBSSampler
     executable_path: None
     dicts:
-
       temperature: None
       externalCurrent: None
       Config:

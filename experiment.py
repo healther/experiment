@@ -43,7 +43,7 @@ def summarize(experiment_name, folders, quiet=False):
             output.append(json.load(open(os.path.join(folder, 'analysis'), 'r')))
         except IOError: # no useable analysis file
             continue
-        if not quiet:
+        if not quiet and i%100==0:
             print("Collecting {: 3.1f}% complete".format(100*i/len(folders)), end='\r')
     print("{}: Collected {} results".format(datetime.datetime.now(), len(output)))
 

@@ -84,9 +84,19 @@ def expanddict(dict_to_expand, expansions, rules):
     for ident, values in expansions.items():
         if values[0] == 'func':
             if values[1] == 'linspace':
-                values = np.linspace(values[2], values[3], values[4])
+                values = np.linspace(values[2], values[3], values[4]).round(decimals=7)
             elif values[1] == 'logspace':
-                values = np.logspace(values[2], values[3], values[5])
+                values = np.logspace(values[2], values[3], values[4]).round(decimals=7)
+            elif values[1] == 'multiple':
+                actual_values = []
+                for vs in values[2]:
+                    if vs[1] == 'linspace':
+                        actual_values.append(np.linspace(vs[2], vs[3], vs[4]).round(decimals=7))
+                    elif vs[1] == 'logspace':
+                        actual_values.append(np.linspace(vs[2], vs[3], vs[4]).round(decimals=7))
+                    else:
+                        raise ValueError("Didn't recognize {} as a function type".format(values[1]))
+                values = np.unique(np.concatenate(actual_values))
             else:
                 raise ValueError("Didn't recognize {} as a function type".format(values[1]))
         keypositions = _find_key_from_identifier(dict_to_expand, ident)
