@@ -1,0 +1,68 @@
+executionParams:
+  clustername: BWnemo
+  parameters: {timeperjob: 10000., nnodes: 1, nprocs: 20, walltime: 41000}
+executable: /home/hd/hd_hd/hd_wv385/git/networks/01_ISING/ISING.py
+envscript: /home/hd/hd_hd/hd_wv385/bin/mysoftware
+stub:
+  backend:
+    name: NeuralSampler
+    executable_path: /home/hd/hd_hd/hd_wv385/git/neuralsampling/neuralsampler/bin/neuralsampler
+    dicts:
+      Config:
+        NeuronType: log
+        delay: 1
+        networkUpdateScheme: InOrder
+        nupdates: 2200000
+        subsampling: 10
+        outputEnv: True
+        outputScheme: MeanActivity
+        randomSeed: 42424243
+        randomSkip: 1000000
+        synapseType: cuto
+        tauref: 100
+        tausyn: 100
+      temperature:
+        type: Const
+        times: [0, 110000000]
+        values: [temp, temp]
+      externalCurrent:
+        type: Const
+        times: [0, 10010000]
+        values: [0., 0.]
+  network:
+    weightname: create_nn
+    weightparameters:
+      linearsize: 100
+      dimension: 2
+      weight: 1.0
+      weightnoise: 0.0
+      weightnoiseseed: 1
+    biasname: create_bias
+    biasparameters:
+      biasfactor: 1.0
+      biasoffset: bias
+      biasnoise: 0.0
+      biasnoiseseed: 1
+    initialstatename: create_initialstate_from_file
+    initialstateparameters:
+      nsites: 10000
+      fname: /work/ws/nemo/hd_wv385-critical-0/experiment/PaperGibbs/1.0_1.74/finalstate.json
+      filetype: 'json'
+  analysis:
+    name: analysis_mean
+    parameters:
+      burnin: 0
+      subsampling: 1
+      nupdates: 2200000
+    hysteresis: True
+    timecourse: True
+    timecourseparameters:
+      time: 1
+    video: False
+    videoparameters: None
+    finalstate: True
+experimentName: Paper01Cutoh0line
+
+replacements: 
+  bias: [0.033, 0.058, 0.083, 0.113, 0.137, 0.153, 0.16 , 0.163, 0.145, 0.115]
+  temp: [0.2  , 0.243, 0.286, 0.329, 0.371, 0.414, 0.457, 0.5, 0.7, 0.9  ]
