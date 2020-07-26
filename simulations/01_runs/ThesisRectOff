@@ -1,0 +1,67 @@
+executionParams:
+  clustername: BWnemo
+  parameters: {timeperjob: 10000., nnodes: 1, nprocs: 20, walltime: 41000}
+executable: /home/hd/hd_hd/hd_wv385/git/networks/01_ISING/ISING.py
+envscript: /home/hd/hd_hd/hd_wv385/bin/mysoftware
+stub:
+  backend:
+    name: NeuralSampler
+    executable_path: /home/hd/hd_hd/hd_wv385/git/neuralsampling/neuralsampler/bin/neuralsampler
+    dicts:
+      Config:
+        NeuronType: log
+        delay: 1
+        networkUpdateScheme: InOrder
+        nupdates: 2200000
+        subsampling: 10
+        outputEnv: True
+        outputScheme: MeanActivity
+        randomSeed: 42424243
+        randomSkip: 1000000
+        synapseType: rect
+        tauref: 100
+        tausyn: 100
+      temperature:
+        type: Const
+        times: [0, 100000001]
+        values: [temp, temp]
+      externalCurrent:
+        type: Const
+        times: [0, 10010000]
+        values: [0., 0.]
+  network:
+    weightname: create_nn
+    weightparameters:
+      linearsize: 80
+      dimension: 2
+      weight: 1.0
+      weightnoise: 0.0
+      weightnoiseseed: 0
+    biasname: create_bias
+    biasparameters:
+      biasfactor: 1.0
+      biasoffset: bias
+      biasnoise: 0.0
+      biasnoiseseed: 0
+    initialstatename: create_initialstate_from_file
+    initialstateparameters:
+      nsites: 6400
+      fname: '/work/ws/nemo/hd_wv385-critical-0/experiment/simulations/ThesisRectFlat/-0.1_[0.5, 0.5]/finalstate.json'
+      filetype: 'json'
+  analysis:
+    name: analysis_mean
+    parameters:
+      burnin: 100000
+      subsampling: 1
+      nupdates: 22000000
+    timecourse: True
+    timecourseparameters:
+      time: 1
+    video: False
+    videoparameters: None
+    finalstate: True
+experimentName: ThesisRectOff
+
+replacements:
+  bias: [func, linspace, -0.1, 0.1, 41]
+  temp: [func, multiple, [[func, linspace, 0.2, 2., 10], [func, linspace, 0.5, 0.7, 21]]]

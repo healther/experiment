@@ -1,6 +1,6 @@
 executionParams:
   clustername: BWnemo
-  parameters: {timeperjob: 10000, nnodes: 1, nprocs: 20, walltime: 11000}
+  parameters: {timeperjob: 10000, nnodes: 1, nprocs: 20, walltime: 41000}
 experimentName: ThesisCalibrationCuba
 executable: /home/hd/hd_hd/hd_wv385/git/networks/01_ISING/ISING.py
 envscript: /home/hd/hd_hd/hd_wv385/bin/mysoftware

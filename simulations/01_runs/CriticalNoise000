@@ -1,0 +1,75 @@
+executionParams:
+  clustername: BWnemo
+  parameters: {timeperjob: 5000., nnodes: 1, nprocs: 10, walltime: 24000}
+executable: /home/hd/hd_hd/hd_wv385/git/networks/01_ISING/ISING.py
+envscript: /home/hd/hd_hd/hd_wv385/bin/mysoftware
+stub:
+  backend:
+    name: NeuralSampler
+    executable_path: /home/hd/hd_hd/hd_wv385/git/neuralsampling/neuralsampler/bin/neuralsampler
+    dicts:
+      Config:
+        NeuronType: neurontype
+        delay: 1
+        networkUpdateScheme: InOrder
+        nupdates: 1100000
+        subsampling: 1
+        outputEnv: True
+        outputScheme: MeanActivity
+        randomSeed: rseed
+        randomSkip: 1000000
+        synapseType: rect
+        tauref: 1
+        tausyn: 1
+      temperature:
+        type: Const
+        times: [0, 100000001]
+        values: [1., 1.]
+      externalCurrent:
+        type: Const
+        times: [0, 10010000]
+        values: [0., 0.]
+  network:
+    weightname: create_nn
+    weightparameters:
+      linearsize: 100
+      dimension: 2
+      weight: w
+      weightnoise: wn
+      weightnoiseseed: 32323232
+    biasname: create_bias
+    biasparameters:
+      biasfactor: bf
+      biasoffset: 0.
+      biasnoise: bn
+      biasnoiseseed: 32323233
+    initialstatename: create_uniform_initialstate
+    initialstateparameters:
+      nsites: 10000
+      meanactivity: 0.5
+      initialrseed: 4343434343
+      tauzeromin: 1
+      tauzeromax: 2
+      tauonemin: 0
+      tauonemax: 1
+  analysis:
+    name: analysis_mean
+    parameters:
+      burnin: 100000
+      subsampling: 1
+      nupdates: 1100000
+    timecourse: True
+    timecourseparameters:
+      time: 1
+    video: False
+    videoparameters: None
+    finalstate: True
+experimentName: CriticalNoise000
+
+replacements:
+  neurontype: [log, erf]
+  wn: [0.0, 0.1, 0.2, 0.3]
+  bn: [0.0, 0.1, 0.2, 0.3]
+  w: [func, linspace, 0.5, 2.0, 81]
+  bf: [func, linspace, 0.9, 1.1, 11]
+  rseed: [42424242]

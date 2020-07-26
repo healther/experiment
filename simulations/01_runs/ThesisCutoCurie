@@ -1,0 +1,70 @@
+executionParams:
+  clustername: BWnemo
+  parameters: {timeperjob: 10000., nnodes: 1, nprocs: 20, walltime: 41000}
+executable: /home/hd/hd_hd/hd_wv385/git/networks/01_ISING/ISING.py
+envscript: /home/hd/hd_hd/hd_wv385/bin/mysoftware
+stub:
+  backend:
+    name: NeuralSampler
+    executable_path: /home/hd/hd_hd/hd_wv385/git/neuralsampling/neuralsampler/bin/neuralsampler
+    dicts:
+      Config:
+        NeuronType: log
+        delay: 1
+        networkUpdateScheme: InOrder
+        nupdates: 2200000
+        subsampling: 10
+        outputEnv: True
+        outputScheme: MeanActivity
+        randomSeed: rseed
+        randomSkip: 1000000
+        synapseType: cuto
+        tauref: 100
+        tausyn: 100
+      temperature:
+        type: Linear
+        times: [0, 400000, 800000, 1200000, 1600000, 2000000, 2200000, 110000000]
+        values: [2.5, 1.5, 1.0,    0.75,    0.6,     0.4,     0.2,     0.1]
+      externalCurrent:
+        type: Const
+        times: [0, 999999999]
+        values: [0.0, 0.0]
+  network:
+    weightname: create_nn
+    weightparameters:
+      linearsize: 100
+      dimension: 2
+      weight: 1.0
+      weightnoise: 0.0
+      weightnoiseseed: 1
+    biasname: create_bias
+    biasparameters:
+      biasfactor: 1.0
+      biasoffset: bias
+      biasnoise: 0.0
+      biasnoiseseed: 1
+    initialstatename: create_single_initialstate
+    initialstateparameters:
+      nsites: 10000
+      meanactivity: 0.5
+      initialrseed: 43434343
+      tauzero: 100
+      tauone: 0
+  analysis:
+    name: analysis_mean
+    parameters:
+      burnin: 0
+      subsampling: 1
+      nupdates: 2200000
+    hysteresis: True
+    timecourse: True
+    timecourseparameters:
+      time: 1
+    video: False
+    videoparameters: None
+    finalstate: True
+experimentName: ThesisCutoCurie
+
+replacements: 
+  bias: [func, linspace, -0.5, 1.0, 31]
+  rseed: [41414141, 42424242, 43434343, 45454545, 46464646, 47474747, 48484848, 49494949]

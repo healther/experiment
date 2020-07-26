@@ -1,0 +1,100 @@
+executionParams:
+  clustername: BWnemo
+  parameters: {timeperjob: 38000., nnodes: 1, nprocs: 20, walltime: 40000}
+executable: /home/hd/hd_hd/hd_wv385/git/networks/01_ISING/ISING.py
+envscript: /home/hd/hd_hd/hd_wv385/bin/mysoftware
+stub:
+  backend:
+    name: SBSSampler
+    executable_path: None
+    dicts:
+      externalCurrent: None
+      Config:
+        temperature:
+          temps: [0.252, 0.292, 0.339, 0.396, 0.456, 0.530, 0.612, 0.708, 0.826, 0.955, 1.11, 1.28, 1.49, 1.73, 2.01, 2.34]
+          excrates: [248.2, 336.0, 454.9, 615.8, 833.8, 1128.8, 1528.3, 2069.1, 2801.4, 3792.7, 5134.8, 6952.0, 9412.0, 12742.0, 17252.0, 23357.0]
+          inhrates: [348.0, 455.7, 597.8, 786.7, 1037.4, 1369.6, 1813.4, 2404.9, 3197.6, 4256.4, 5678.4, 7584.4, 10155.0, 13611.0, 18269.0, 24540.0]
+          temperature: temp
+          values: [temp, temp]
+        Calibration:
+          runparams:
+            duration: 100000.
+            num_samples: 50
+            burn_in_time: 500.
+            dt: 0.01
+            sim_setup_kwargs:
+              spike_precision: on_grid
+          parameters:
+            cm: 0.002
+            tau_m: .1
+            e_rev_E: 50.
+            e_rev_I: -50.
+            v_thresh: -0.
+            tau_syn_E: 10.
+            v_rest: -0.
+            tau_syn_I: 10.
+            v_reset: -0.001
+            tau_refrac: 10.
+            i_offset: 0.
+          folder: /work/ws/nemo/hd_wv385-critical-0/calibration2
+          runCalibration: False
+          simName: pyNN.nest
+          noise:
+            weights: [0.001, -0.001]
+            rates: [4184.33, 4671.38]
+        saturating_synapses_enabled: True
+        use_proper_tso: True
+        Run:
+          duration: 60000.
+          dt: .1
+          burnInTime: 0.
+          sampledt: 1.
+          v_0: -10.0
+          tauref: 100
+          nsamplers: 3600
+          past_len: 10
+          outtype: mean
+  network:
+    weightname: create_nn
+    weightparameters:
+      linearsize: 60
+      dimension: 2
+      weight: w
+      weightnoise: 0.0
+      weightnoiseseed: 1
+    biasname: create_bias
+    biasparameters:
+      biasfactor: 1.0
+      biasoffset: bias
+      biasnoise: 0.0
+      biasnoiseseed: 1
+    initialstatename: create_uniform_initialstate
+    initialstateparameters:
+      nsites: 3600
+      meanactivity: 0.5
+      initialrseed: 42424242
+      tauzeromin: 0
+      tauzeromax: 100
+      tauonemin: 100
+      tauonemax: 200
+  analysis:
+    name: analysis_mean
+    parameters:
+      burnin: 0
+      subsampling: 1
+      nupdates: 60000
+      nsamplers: 3600
+      tauref: 10.0
+    hysteresis: True
+    timecourse: True
+    timecourseparameters:
+      time: 1
+    video: False
+    videoparameters: None
+    finalstate: True
+experimentName: LIFPaperCopy01
+
+replacements: 
+  bias: [func, multiple, [[func, linspace, -0.5, 0.5, 11], [func, linspace, 0.2, -0.1, 31], ]]
+  temp: [1.0]
+  w: [func, multiple, [[func, linspace, 0.0, 3.0, 31], [func, linspace, 1.5, 2.0, 11], ]]

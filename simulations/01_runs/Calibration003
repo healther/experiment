@@ -1,7 +1,7 @@
 executionParams:
   clustername: BWnemo
-  parameters: {timeperjob: 10000, nnodes: 1, nprocs: 20, walltime: 41000}
-experimentName: ThesisCalibrationCoba
+  parameters: {timeperjob: 10000, nnodes: 1, nprocs: 20, walltime: 11000}
+experimentName: Calibration003
 executable: /home/hd/hd_hd/hd_wv385/git/networks/01_ISING/ISING.py
 envscript: /home/hd/hd_hd/hd_wv385/bin/mysoftware
 stub:
@@ -13,12 +13,11 @@ stub:
       externalCurrent: None
       Config:
         Calibration:
-          type: COBA
           runparams:
             duration: 100000.
             num_samples: 50
             burn_in_time: 500.
-            dt: 0.1
+            dt: 0.01
             sim_setup_kwargs:
               spike_precision: on_grid
           parameters:
@@ -33,7 +32,7 @@ stub:
             v_reset: -0.001
             tau_refrac: 10.
             i_offset: 0.
-          folder: /work/ws/nemo/hd_wv385-critical-0/calibrationCOBA
+          folder: /work/ws/nemo/hd_wv385-critical-0/calibration2
           runCalibration: True
           simName: pyNN.nest
           noise:
@@ -58,8 +57,8 @@ stub:
       weightnoiseseed: 0
     biasname: create_bias
     biasparameters:
-      biasfactor: 1.0
-      biasoffset: 0.0
+      biasfactor: bf
+      biasoffset: boffset
       biasnoise: 0.
       biasnoiseseed: 0
     initialstatename: create_uniform_initialstate
@@ -75,7 +74,9 @@ stub:
     name: none
   folder: /work/ws/nemo/hd_wv385-critical-0/calibrationPaper01
 replacements:
-  posweight: [0.01, 0.001, 0.0001]
-  negweight: [-0.01, -0.001, -0.0001]
+  bf: [1.0]
+  boffset: [0.]
+  posweight: [0.01]
+  negweight: [-0.01]
   nue: [func, logspace, 2, 4.5, 20]
   nui: [func, logspace, 2, 4.5, 20]
