@@ -36,9 +36,6 @@ cp 'simulations/ThesisExponentialCurie/41414141_-0.5/output' Thesis/ExpCurie0.5.
 cp 'simulations/ThesisExponentialHysteresis/-0.4_[0.40000000000000002, 0.40000000000000002]/output' Thesis/ExpHyst0.4.output
 cp 'simulations/ThesisExponentialHysteresis/-0.4_[0.59999999999999998, 0.59999999999999998]/output' Thesis/ExpHyst0.6.output
 cp 'simulations/ThesisExponentialHysteresis/-0.4_[0.80000000000000004, 0.80000000000000004]/output' Thesis/ExpHyst0.8.output
-#cp 'simulations/ThesisExponentialHysteresis/-0.4_[0.59999999999999998, 0.59999999999999998]/output' Thesis/ExpHyst0.6.output
-#cp 'simulations/ThesisExponentialHysteresis/-0.4_[0.69999999999999996, 0.69999999999999996]/output' Thesis/ExpHyst0.7.output
-#cp 'simulations/ThesisExponentialHysteresis/-0.4_[0.80000000000000004, 0.80000000000000004]/output' Thesis/ExpHyst0.8.output
 
 
 ##### Cuto figure 4.11
@@ -64,13 +61,16 @@ cp 'simulations/ThesisTail/-0.42_[0.73499999999999999, 0.73499999999999999]/fina
 cp 'simulations/ThesisTail/-0.35_[0.5, 0.5]/finalstate.json' Thesis/TailStateLow_-0.35_0.5.json
 cp 'simulations/ThesisTail/-0.45_[0.90000000000000002, 0.90000000000000002]/finalstate.json' Thesis/TailStateHigh_-0.45_0.9.json
 # curie
-cp 'simulations/ThesisTailCurie/41414141_-0.35/output' Thesis/CutoCurie-0.35.output
-cp 'simulations/ThesisTailCurie/41414141_-0.4/output' Thesis/CutoCurie-0.4.output
-cp 'simulations/ThesisTailCurie/41414141_-0.45/output' Thesis/CutoCurie-0.45.output
+cp 'simulations/ThesisTailCurie/41414141_-0.35/output' Thesis/TailCurie-0.35.output
+cp 'simulations/ThesisTailCurie/41414141_-0.4/output' Thesis/TailCurie-0.4.output
+cp 'simulations/ThesisTailCurie/41414141_-0.45/output' Thesis/TailCurie-0.45.output
 # hysteresis
-cp 'simulations/ThesisTailHysteresis/-0.4_[0.5, 0.5]/output' Thesis/CutoHyst0.5.output
-cp 'simulations/ThesisTailHysteresis/-0.4_[0.69999999999999996, 0.69999999999999996]/output' Thesis/CutoHyst0.7.output
-cp 'simulations/ThesisTailHysteresis/-0.4_[0.90000000000000002, 0.90000000000000002]/output' Thesis/CutoHyst0.9.output
+cp 'simulations/ThesisTailHysteresis/-0.4_[0.5, 0.5]/output' Thesis/TailHyst0.5.output
+cp 'simulations/ThesisTailHysteresis/-0.4_[0.69999999999999996, 0.69999999999999996]/output' Thesis/TailHyst0.7.output
+cp 'simulations/ThesisTailHysteresis/-0.4_[0.90000000000000002, 0.90000000000000002]/output' Thesis/TailHyst0.9.output
 
 
+cp 'collect/ThesisLIF' Thesis/PDLIF.json
+
+tar -zcf Thesis.tar.gz Thesis/
 

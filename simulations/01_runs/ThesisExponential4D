@@ -18,12 +18,12 @@ stub:
         outputScheme: MeanActivity
         randomSeed: 42424243
         randomSkip: 1000000
-        synapseType: rect
+        synapseType: exp
         tauref: 100
         tausyn: 100
       temperature:
         type: Const
-        times: [0, 100000001]
+        times: [0, 110000000]
         values: [temp, temp]
       externalCurrent:
         type: Const
@@ -32,36 +32,39 @@ stub:
   network:
     weightname: create_nn
     weightparameters:
-      linearsize: 80
-      dimension: 2
+      linearsize: 10
+      dimension: 4
       weight: 1.0
       weightnoise: 0.0
-      weightnoiseseed: 0
+      weightnoiseseed: 1
     biasname: create_bias
     biasparameters:
       biasfactor: 1.0
       biasoffset: bias
       biasnoise: 0.0
-      biasnoiseseed: 0
-    initialstatename: create_initialstate_from_file
+      biasnoiseseed: 1
+    initialstatename: create_single_initialstate
     initialstateparameters:
-      nsites: 6400
-      fname: '/work/ws/nemo/hd_wv385-critical-0/experiment/simulations/ThesisRect/0.0_[0.58999999999999997, 0.58999999999999997]/finalstate.json'
-      filetype: 'json'
+      nsites: 10000
+      meanactivity: 0.5
+      initialrseed: 43434343
+      tauzero: 200
+      tauone: 0
   analysis:
     name: analysis_mean
     parameters:
-      burnin: 100000
+      burnin: 0
       subsampling: 1
-      nupdates: 22000000
+      nupdates: 2200000
+    hysteresis: True
     timecourse: True
     timecourseparameters:
       time: 1
     video: False
     videoparameters: None
     finalstate: True
-experimentName: ThesisRectCrit
+experimentName: ThesisExponential4D
 
-replacements:
-  bias: [func, linspace, -0.1, 0.1, 41]
-  temp: [func, multiple, [[func, linspace, 0.2, 2., 10], [func, linspace, 0.5, 0.7, 21]]]
+replacements: 
+  bias: [func, multiple, [[func, linspace, -0.2, -0.7, 11], [func, linspace, -0.3, -0.5, 41], ]]
+  temp: [func, multiple, [[func, linspace, 0.1, 1.0, 10], [func, linspace, 0.65, 0.8, 31], [func, linspace, 0.8, 0.9, 6]]]

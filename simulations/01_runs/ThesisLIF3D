@@ -1,7 +1,6 @@
 executionParams:
   clustername: BWnemo
-  parameters: {timeperjob: 10000, nnodes: 1, nprocs: 20, walltime: 41000}
-experimentName: ThesisCalibrationCoba
+  parameters: {timeperjob: 38000., nnodes: 1, nprocs: 20, walltime: 50000}
 executable: /home/hd/hd_hd/hd_wv385/git/networks/01_ISING/ISING.py
 envscript: /home/hd/hd_hd/hd_wv385/bin/mysoftware
 stub:
@@ -9,16 +8,20 @@ stub:
     name: SBSSampler
     executable_path: None
     dicts:
-      temperature: None
       externalCurrent: None
       Config:
+        temperature:
+          temps: [0.178, 0.214, 0.254, 0.299, 0.350, 0.409, 0.476, 0.554, 0.644, 0.748, 0.869, 1.009, 1.172, 1.361, 1.582, 1.837, 2.135]
+          excrates: [183.3, 248.2, 336.0, 454.9, 615.8, 833.8, 1128.8, 1528.3, 2069.1, 2801.4, 3792.7, 5134.8, 6951.9, 9412.0, 12742.7, 17252.1, 23357.2] 
+          inhrates: [147.9, 229.1, 336.1, 477.7, 664.3, 911.9, 1240.7, 1679.6, 2264.6, 3047.1, 4096.2, 5503.5, 7397.1, 9947.3, 13382.5, 18009.4, 24253.3]
+          temperature: temp
+          values: [temp, temp]
         Calibration:
-          type: COBA
           runparams:
             duration: 100000.
             num_samples: 50
             burn_in_time: 500.
-            dt: 0.1
+            dt: 0.01
             sim_setup_kwargs:
               spike_precision: on_grid
           parameters:
@@ -33,38 +36,41 @@ stub:
             v_reset: -0.001
             tau_refrac: 10.
             i_offset: 0.
-          folder: /work/ws/nemo/hd_wv385-critical-0/calibrationCOBA
-          runCalibration: True
+          folder: /work/ws/nemo/hd_wv385-critical-0/calibrationCUBA
+          runCalibration: False
           simName: pyNN.nest
           noise:
-            weights: [posweight, negweight]
-            rates: [nue, nui]
+            weights: [0.01, -0.01]
+            rates: [5134.8, 5503.5]
         saturating_synapses_enabled: True
         use_proper_tso: True
         Run:
-          duration: 30.
+          duration: 60000.
           dt: .1
           burnInTime: 0.
-          sampledt: 10.
-          v_0: -40.
-          past_len: 20.  
+          sampledt: 1.
+          v_0: -10.0
+          tauref: 100
+          nsamplers: 3600
+          past_len: 10
+          outtype: mean
   network:
     weightname: create_nn
     weightparameters:
-      linearsize: 40
-      dimension: 2
+      linearsize: 20
+      dimension: 3
       weight: 1.0
-      weightnoise: 0.
-      weightnoiseseed: 0
+      weightnoise: 0.0
+      weightnoiseseed: 1
     biasname: create_bias
     biasparameters:
       biasfactor: 1.0
-      biasoffset: 0.0
-      biasnoise: 0.
-      biasnoiseseed: 0
+      biasoffset: bias
+      biasnoise: 0.0
+      biasnoiseseed: 1
     initialstatename: create_uniform_initialstate
     initialstateparameters:
-      nsites: 1600
+      nsites: 8000
       meanactivity: 0.5
       initialrseed: 42424242
       tauzeromin: 0
@@ -72,11 +78,13 @@ stub:
       tauonemin: 100
       tauonemax: 200
   analysis:
-    name: none
+    name: analysis_mean
     parameters:
-      burnin: 100000
+      burnin: 0
       subsampling: 1
-      nupdates: 1000000
+      nupdates: 60000
+      nsamplers: 8000
+      tauref: 10.0
     hysteresis: True
     timecourse: True
     timecourseparameters:
@@ -84,9 +92,8 @@ stub:
     video: False
     videoparameters: None
     finalstate: True
-  folder: /work/ws/nemo/hd_wv385-critical-0/calibrationPaper01
-replacements:
-  posweight: [0.01, 0.001, 0.0001]
-  negweight: [-0.01, -0.001, -0.0001]
-  nue: [func, logspace, 2, 4.5, 20]
-  nui: [func, logspace, 2, 4.5, 20]
+experimentName: ThesisLIF3D
+
+replacements: 
+  bias: [func, multiple, [[func, linspace, -0.5, 0.5, 11], [func, linspace, -0.2, 0.0, 21], ]]
+  temp: [func, multiple, [[func, linspace, 0.3, 1.5, 13], [func, linspace, 0.5, 0.8, 31], ]]

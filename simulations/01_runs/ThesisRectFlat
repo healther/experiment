@@ -57,7 +57,7 @@ stub:
     parameters:
       burnin: 100000
       subsampling: 1
-      nupdates: 22000000
+      nupdates: 2200000
     timecourse: True
     timecourseparameters:
       time: 1
